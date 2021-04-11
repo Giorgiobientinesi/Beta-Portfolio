@@ -27,18 +27,18 @@ Etf = ['^GSPC', '^STOXX50E', 'EEM', '^IXIC', 'DIA','EWG', '^N225', 'IWDA.AS','AG
 Etf1 = ['Sp500', 'Eurostockk50', 'Emerging markets', 'Nasdaq', 'Dow jones industrial','Germany index', 'Nikkei 225', 'World index','Aggregate Bond', 'Russel 2000', 'Volatility Index','Gold index fund', 'Technology index', 'High dividends index fund']
 
 
-
+#TITLE OF THE WEB APP
 st.write("""
 # Beta Prediction App
-This app predicts the **beta** and the expected **return** of your portfolio!
+This app predicts the **beta** and the expected **returns** of your portfolio!
 """)
 
 st.sidebar.header('Build your Portfolio')
 
-
+#SIDEBAR OF THE WEB APP. THIS TAKES THE INPUT OF THE USER(ETF AND WEIGHTS)
 First_etf = st.sidebar.selectbox(
     'Select an ETF',
-    (['^GSPC', '^STOXX50E', 'EEM', '^IXIC', 'DIA','EWG', '^N225', 'IWDA.AS','AGG', '^RUT', '^VIX','XGD.TO', 'VGT', 'VYM'])
+    (['S&P500', 'Eurostoxx50', 'Emerging markets', 'Nasdaq', 'Dow Jones industrial average','Germany index', 'Nikkei 225', 'World index','Aggregate Bond', 'Russel 2000', 'Volatility Index','Gold index fund', 'Technology index', 'High dividends index fund'])
 )
 
 First_etf_weight = st.sidebar.slider(First_etf, 0, 100, 25)
@@ -46,34 +46,43 @@ First_etf_weight = st.sidebar.slider(First_etf, 0, 100, 25)
 
 Second_etf = st.sidebar.selectbox(
     'Select an ETF',
-    (['^STOXX50E', '^GSPC', 'EEM', '^IXIC', 'DIA','EWG', '^N225', 'IWDA.AS','AGG', '^RUT', '^VIX','XGD.TO', 'VGT', 'VYM'])
+    (['Eurostoxx50', 'S&P500', 'Emerging markets', 'Nasdaq', 'Dow Jones industrial average','Germany index', 'Nikkei 225', 'World index','Aggregate Bond', 'Russel 2000', 'Volatility Index','Gold index fund', 'Technology index', 'High dividends index fund'])
 )
 Second_etf_weight = st.sidebar.slider(Second_etf, 0, 100, 25)
 
 Third_etf = st.sidebar.selectbox(
     'Select an ETF',
-    (['EEM', '^GSPC', '^STOXX50E', '^IXIC', 'DIA','EWG', '^N225', 'IWDA.AS','AGG', '^RUT', '^VIX','XGD.TO', 'VGT', 'VYM'])
+    (['Emerging markets', 'S&P500', 'Eurostoxx50', 'Nasdaq', 'Dow Jones industrial average','Germany index', 'Nikkei 225', 'World index','Aggregate Bond', 'Russel 2000', 'Volatility Index','Gold index fund', 'Technology index', 'High dividends index fund'])
 )
 Third_etf_weight = st.sidebar.slider(Third_etf, 0, 100, 25)
 
 Fourth_etf = st.sidebar.selectbox(
     'Select an ETF',
-    (['DIA', '^GSPC', '^STOXX50E', 'EEM','^N225', '^IXIC','EWG', 'IWDA.AS','AGG', '^RUT', '^VIX','XGD.TO', 'VGT', 'VYM'])
+    (['Nasdaq', 'S&P500', 'Eurostoxx50', 'Emerging markets', 'Dow Jones industrial average','Germany index', 'Nikkei 225', 'World index','Aggregate Bond', 'Russel 2000', 'Volatility Index','Gold index fund', 'Information Technology index', 'High dividends index fund'])
 )
 
 Fourth_etf_weight = st.sidebar.slider(Fourth_etf, 0, 100, 25)
 
+#DICTIONARY. THIS TRANSFORM THE INPUT IN YAHOO TICKERS. IT IS MADE TO MAKE THE WEB APP MORE USER-FRIENDLY.
+d = {
+    'S&P500': '^GSPC',
+    'Eurostoxx50' : '^STOXX50E',
+    'Emerging markets' : 'EEM',
+    'Nasdaq' : '^IXIC',
+    'Dow Jones industrial average' : 'DIA',
+    'Germany index' : 'EWG',
+    'Nikkei 225' : '^N225',
+    'World index' : 'IWDA.AS',
+    'Aggregate Bond' : 'AGG',
+    'Russel 2000' : '^RUT',
+    'Volatility Index' : '^VIX',
+    'Gold index fund' : 'XGD.TO',
+    'Information Technology index' : 'VGT',
+    'High dividends index fund' : 'VYM'
+    }
 
-Chase_list = [First_etf, Second_etf, Third_etf, Fourth_etf]
-st.header("**In which Etfs are you investing?**")
-a = 0
-while a < len(Etf):
-    for el in Chase_list:
-        if el == Etf[a]:
-            st.write("You are investing in " + Etf1[a])
-    a +=1
 
-
+#TRANSFORM THE USER INPUT INTO A DATAFRAME
 def user_input():
     data = {First_etf : str(First_etf_weight) + "%",
             Second_etf : str(Second_etf_weight) + "%",
@@ -83,25 +92,27 @@ def user_input():
     return features
 
 
-if (First_etf_weight + Second_etf_weight + Third_etf_weight +Fourth_etf_weight) != 100:
+if (First_etf_weight + Second_etf_weight + Third_etf_weight +Fourth_etf_weight) != 100: #THIS STOPS THE PROGRAM IF THE PORTFOLIO WEIGHTS ARE NOT 100.
     st.write("**The sum of your Portfolio weights must be 100**")
 else:
-    Portfolio = user_input()
+    Portfolio = user_input() #PRINT THE COMPOSITION OF YOUR PORTFOLIO
     st.header('**Your Portfolio composition**')
     st.write(Portfolio)
 #..............................................................
 
-    df1 = web.get_data_yahoo(First_etf,'09/04/2016',interval='m')
-    df2 = web.get_data_yahoo(Second_etf,'09/04/2016',interval='m')
-    df3 = web.get_data_yahoo(Third_etf,'09/04/2016',interval='m')
-    df4 = web.get_data_yahoo(Fourth_etf,'09/04/2016',interval='m')
-    #MONTHLY RETURN
-    df1 = df1.loc[:, ["Adj Close"]]
-    df1.rename(columns={'Adj Close': 'adj_close'}, inplace=True)
+#RETRIEVE DATA FROM YAHOO
+    df1 = web.get_data_yahoo(d[First_etf],'09/04/2016',interval='m')
+    df2 = web.get_data_yahoo(d[Second_etf],'09/04/2016',interval='m')
+    df3 = web.get_data_yahoo(d[Third_etf],'09/04/2016',interval='m')
+    df4 = web.get_data_yahoo(d[Fourth_etf],'09/04/2016',interval='m')
+#MONTHLY RETURN
+
+    df1 = df1.loc[:, ["Adj Close"]] #TAKE ONLY THE COLUMN ADJ CLOSE
+    df1.rename(columns={'Adj Close': 'adj_close'}, inplace=True) #RENAME IT
     df1['simple_rtn'] = df1.adj_close.pct_change()
     df1['log_rtn'] = np.log(df1.adj_close / df1.adj_close.shift(1))
-    df1_average = df1['log_rtn'].mean()
-    df1_average_perc = df1_average * 100
+    df1_average = df1['log_rtn'].mean() #MEAN OF THE LOG RTN
+    df1_average_perc = df1_average * 100 #MAKE IT  EASIER TO READ, DO IT FOR EVERY ETF
 
     df2 = df2.loc[:, ["Adj Close"]]
     df2.rename(columns={'Adj Close': 'adj_close'}, inplace=True)
@@ -124,16 +135,11 @@ else:
     df4_average = df4['log_rtn'].mean()
     df4_average_perc = df4_average * 100
 
-    st.header("**Average monthly return of each element in the last 5 years**")
 
-    st.write("The " + First_etf + " average return is " +  str(df1_average_perc)[:5] + "%")
-    st.write("The " + Second_etf + " average return is " + str(df2_average_perc)[:5] + "%")
-    st.write("The " + Third_etf+ " average return is " + str(df3_average_perc)[:5] + "%")
-    st.write("The " + Fourth_etf +  " average return is " + str(df4_average_perc)[:5] + "%")
 
     #BETA FOR EACH STOCK
-    def regression(Etf):
-        sp500 = web.get_data_yahoo('^GSPC', '05/04/2016', interval='m')
+    def regression(Etf): #THIS FUNCTION CALCULATE THE BETA OF THE SELECTED ETF
+        sp500 = web.get_data_yahoo('^GSPC', '05/04/2016', interval='m') #RETRIEVE S&P500 DATA
         sp500_list = sp500["Adj Close"].tolist()
         sp500 = pd.DataFrame(sp500_list)
         sp500.columns = ["Adj Close"]
@@ -149,31 +155,24 @@ else:
         Etf['simple_rtn'] = Etf.adj_close.pct_change()
         Etf['log_rtn'] = np.log(Etf.adj_close / Etf.adj_close.shift(1))
 
-        X = sp500["log_rtn"][1:]
+        X = sp500["log_rtn"][1:] #THE FIRST VALUE IS NAN, SO I TAKE [1:].
         y = Etf["log_rtn"][1:]
-        slope, intercept, r_value, p_value, std_err = stats.linregress(X, y)
+        slope, intercept, r_value, p_value, std_err = stats.linregress(X, y) #RETRIEVE MODEL STATS
         return slope
 
-    beta1 = regression(First_etf)
-    beta2 = regression(Second_etf)
-    beta3 = regression(Third_etf)
-    beta4 = regression(Fourth_etf)
+#FIND  BETA FOR EVERY ETF
+    beta1 = regression(d[First_etf])
+    beta2 = regression(d[Second_etf])
+    beta3 = regression(d[Third_etf])
+    beta4 = regression(d[Fourth_etf])
 
-    st.header("**Beta for each Etf**")
-    st.write("The " + First_etf + " beta is " +  str(beta1)[:5])
-    st.write("The " + Second_etf + " beta is " + str(beta2)[:5])
-    st.write("The " + Third_etf + " beta is " + str(beta3)[:5])
-    st.write("The " + Fourth_etf +  " beta is " + str(beta4)[:5])
 
-    #BETA OF THE PORTFOLIO
-    Beta_portfolio = beta1 * (First_etf_weight/100) +beta2 * (Second_etf_weight/100) + beta3 * (Third_etf_weight/100) + beta4 * (Fourth_etf_weight/100)
-    st.header("**Beta of your portfolio**")
-    st.write("The **beta** of your portfolio is " + str(Beta_portfolio)[:5])
+    #BETA OF THE PORTFOLIO, USING THE WEIGHTS
+    Beta_portfolio = beta1 * (First_etf_weight/100) +beta2 * (Second_etf_weight/100) + beta3 * (Third_etf_weight/100) + beta4 * (Fourth_etf_weight/100)  #WEIGHTS ARE NOT IN %
 
-    #EXPECTED RETURN OF THE PORTFOLIO
-    Portfolio_return = df1_average_perc *(First_etf_weight/100) + df2_average_perc *(Second_etf_weight/100)+ df3_average_perc *(Third_etf_weight/100)+ df4_average_perc *(Fourth_etf_weight/100)
-    st.header("**Expected return of your portfolio based on the last 5 years**")
-    st.write("The **Expected monthly return ** of your portfolio is " + str(Portfolio_return)[:5] + "%")
+
+    #EXPECTED RETURN OF THE PORTFOLIO, USING THE WEIGHTS
+    Portfolio_return = df1_average_perc *(First_etf_weight/100) + df2_average_perc *(Second_etf_weight/100)+ df3_average_perc *(Third_etf_weight/100)+ df4_average_perc *(Fourth_etf_weight/100) #WEIGHTS ARE NOT IN %
 
 
     #GRAPH COMPARISON
@@ -186,6 +185,7 @@ else:
     sp500['simple_rtn'] = sp500.adj_close.pct_change()
     sp500['log_rtn'] = np.log(sp500.adj_close / sp500.adj_close.shift(1))
 
+#THE COLUMN 'log_rtn' IS A LIST INSIDE A TUPLE. WE MUST CREATE 2 LIST, AND ITERATE ONE TO OBTAIN THE REAL VALUES
     sp500_list2 = []
     sp500_list1 = sp500["log_rtn"].tolist()
     for el in sp500_list1:
@@ -212,14 +212,35 @@ else:
         df4_list1.append(el)
 
     total_list = []
-    weights = [(First_etf_weight / 100), (Second_etf_weight / 100), (Third_etf_weight / 100), (Fourth_etf_weight / 100)]
+    weights = [(First_etf_weight / 100), (Second_etf_weight / 100), (Third_etf_weight / 100), (Fourth_etf_weight / 100)] #WEIGHTS ARE NOT IN %
     i = 1
     while i < len(df1_list1):
         elements = df1_list1[i]*weights[0] + df2_list1[i]* weights[1] + df3_list1[i]*weights[2] + df4_list1[i]*weights[3]
         total_list.append(elements)
         i +=1
 
-    st.header("**Compare the perfomance**")
+
+    #PRINT THE RESULTS IN THE WEB APP
+    st.header("**Beta of your portfolio**")
+    st.write("The **beta** of your portfolio is " + str(Beta_portfolio)[:5])
+
+    st.header("**Expected returns of your portfolio based on the last 5 years**")
+    st.write("The **Expected monthly returns ** of your portfolio is " + str(Portfolio_return)[:5] + "%")
+
+    st.header("**Beta for each Etf**")
+    st.write("The " + First_etf + " beta is " +  str(beta1)[:5])
+    st.write("The " + Second_etf + " beta is " + str(beta2)[:5])
+    st.write("The " + Third_etf + " beta is " + str(beta3)[:5])
+    st.write("The " + Fourth_etf +  " beta is " + str(beta4)[:5])
+
+    st.header("**Average monthly return of each element in the last 5 years**")
+    st.write("The " + First_etf + " average returns is " +  str(df1_average_perc)[:5] + "%")
+    st.write("The " + Second_etf + " average returns is " + str(df2_average_perc)[:5] + "%")
+    st.write("The " + Third_etf+ " average returns is " + str(df3_average_perc)[:5] + "%")
+    st.write("The " + Fourth_etf +  " average returns is " + str(df4_average_perc)[:5] + "%")
+
+
+    st.header("**Evaluate the perfomance**")
 
     st.write("""
     ## Portfolio perfomance
@@ -230,9 +251,9 @@ else:
     st.line_chart(chart_data)
 
     st.write("""
-    ## Sp500 perfomance
+    ## S&P500 perfomance
     """)
     chart_data2 = pd.DataFrame(
     sp500_list2,
-    columns = ['sp500'])
+    columns = ['S&P500'])
     st.line_chart(chart_data2)
