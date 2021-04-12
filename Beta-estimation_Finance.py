@@ -240,7 +240,7 @@ else:
     st.write("The " + Fourth_etf +  " average returns is " + str(df4_average_perc)[:5] + "%")
 
 
-    st.header("**Evaluate the perfomance**")
+    st.header("**Evaluate the monthly perfomance**")
 
     st.write("""
     ## Portfolio perfomance
