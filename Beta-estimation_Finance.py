@@ -24,7 +24,7 @@ import numpy as np
 
 
 Etf = ['^GSPC', '^STOXX50E', 'EEM', '^IXIC', 'DIA','EWG', '^N225', 'IWDA.AS','AGG', '^RUT', '^VIX','XGD.TO', 'VGT', 'VYM']
-Etf1 = ['Sp500', 'Eurostockk50', 'Emerging markets', 'Nasdaq', 'Dow jones industrial','Germany index', 'Nikkei 225', 'World index','Aggregate Bond', 'Russel 2000', 'Volatility Index','Gold index fund', 'Technology index', 'High dividends index fund']
+Etf1 = ['Sp500', 'Eurostockk50', 'Emerging markets', 'Nasdaq', 'Dow jones industrial','Germany index', 'Nikkei 225', 'World index','Aggregate Bond', 'Russel 2000', 'Volatility Index','Gold index fund', 'Information Technology index', 'High dividends index fund']
 
 
 #TITLE OF THE WEB APP
@@ -38,7 +38,7 @@ st.sidebar.header('Build your Portfolio')
 #SIDEBAR OF THE WEB APP. THIS TAKES THE INPUT OF THE USER(ETF AND WEIGHTS)
 First_etf = st.sidebar.selectbox(
     'Select an ETF',
-    (['S&P500', 'Eurostoxx50', 'Emerging markets', 'Nasdaq', 'Dow Jones industrial average','Germany index', 'Nikkei 225', 'World index','Aggregate Bond', 'Russel 2000', 'Volatility Index','Gold index fund', 'Technology index', 'High dividends index fund'])
+    (['S&P500', 'Eurostoxx50', 'Emerging markets', 'Nasdaq', 'Dow Jones industrial average','Germany index', 'Nikkei 225', 'World index','Aggregate Bond', 'Russel 2000', 'Volatility Index','Gold index fund', 'Information Technology index', 'High dividends index fund'])
 )
 
 First_etf_weight = st.sidebar.slider(First_etf, 0, 100, 25)
@@ -46,13 +46,13 @@ First_etf_weight = st.sidebar.slider(First_etf, 0, 100, 25)
 
 Second_etf = st.sidebar.selectbox(
     'Select an ETF',
-    (['Eurostoxx50', 'S&P500', 'Emerging markets', 'Nasdaq', 'Dow Jones industrial average','Germany index', 'Nikkei 225', 'World index','Aggregate Bond', 'Russel 2000', 'Volatility Index','Gold index fund', 'Technology index', 'High dividends index fund'])
+    (['Eurostoxx50', 'S&P500', 'Emerging markets', 'Nasdaq', 'Dow Jones industrial average','Germany index', 'Nikkei 225', 'World index','Aggregate Bond', 'Russel 2000', 'Volatility Index','Gold index fund', 'Information Technology index', 'High dividends index fund'])
 )
 Second_etf_weight = st.sidebar.slider(Second_etf, 0, 100, 25)
 
 Third_etf = st.sidebar.selectbox(
     'Select an ETF',
-    (['Emerging markets', 'S&P500', 'Eurostoxx50', 'Nasdaq', 'Dow Jones industrial average','Germany index', 'Nikkei 225', 'World index','Aggregate Bond', 'Russel 2000', 'Volatility Index','Gold index fund', 'Technology index', 'High dividends index fund'])
+    (['Emerging markets', 'S&P500', 'Eurostoxx50', 'Nasdaq', 'Dow Jones industrial average','Germany index', 'Nikkei 225', 'World index','Aggregate Bond', 'Russel 2000', 'Volatility Index','Gold index fund', 'Information Technology index', 'High dividends index fund'])
 )
 Third_etf_weight = st.sidebar.slider(Third_etf, 0, 100, 25)
 
